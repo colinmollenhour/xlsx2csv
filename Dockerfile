@@ -1,6 +1,9 @@
-FROM golang:1.8
-RUN mkdir /app 
-ADD . /app/ 
-WORKDIR /app 
-RUN go get github.com/tealeg/xlsx && go build -o xlsx2csv . 
+FROM golang:1.14-alpine
+RUN apk add --no-cache git
+WORKDIR /app
+COPY go.mod .
+COPY go.sum .
+RUN go mod download
+COPY . .
+RUN go build -o ./xlsx2csv .
 CMD ["/app/xlsx2csv"]
